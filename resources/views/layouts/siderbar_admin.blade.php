@@ -8,8 +8,8 @@
             <span class="brand-text fw-light">ADMIN</span>
         </a> --}}
         <a href="{{ route('home_index') }}" class="brand-link">
-            <img src="/storage/{{ $data_c1['logo'] }}" alt="AdminLTE Logo"
-                class="brand-image opacity-75 shadow"  alt="{{ $data_c1['title'] }}" />
+            <img src="/storage/{{ $data_c1['logo'] ?? '' }}" alt="AdminLTE Logo"
+                class="brand-image opacity-75 shadow"  alt="{{ $data_c1['title'] ?? '' }}" />
             {{-- <span class="brand-text fw-light">BUYPROXY</span> --}}
         </a>
         <!--end::Brand Link-->

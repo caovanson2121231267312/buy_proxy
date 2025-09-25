@@ -81,7 +81,7 @@
                     <div class="col-lg-2 col-md-6 col-6">
                         <div class="vl-logo">
                             <a href="{{ route('home_index') }}"  class="header1-logo-block"><img
-                                    src="/storage/{{ $data_c1['logo'] }}" alt="BUYPROXY - Hệ Thống Cung Cấp Proxy Xoay Không Giới Hạn Băng Thông"></a>
+                                    src="/storage/{{ $data_c1['logo'] ?? '' }}" alt="BUYPROXY - Hệ Thống Cung Cấp Proxy Xoay Không Giới Hạn Băng Thông"></a>
                         </div>
                     </div>
                     <div class="col-lg-7 d-none d-lg-block text-end">

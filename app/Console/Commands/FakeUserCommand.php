@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\CallApi;
 use Illuminate\Console\Command;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class FakeUserCommand extends Command
@@ -28,6 +29,10 @@ class FakeUserCommand extends Command
      */
     public function handle()
     {
+        $check = User::find(1)->update([
+            "email_verified_at" => Carbon::now()
+        ]);
+        dd($check);
         $users = [
             ['name' => 'admin', 'email' => 'admin@gmail.com'],
             // ['name' => 'User Two', 'email' => 'user2@example.com'],

@@ -7,7 +7,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', $data_c1['title'])</title>
+    <title>@yield('title', $data_c1['title'] ?? '')</title>
     <meta name="robots" content="noindex, nofollow">
     @if (!empty($data_c1['icon']))
         <link rel="icon" type="image/png" href="/storage/{{ $data_c1['icon'] }}" />
@@ -49,7 +49,7 @@
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                         <div class="vl-footer-widget mb-50">
                             <div class="vl-footer-logo black-logo">
-                                <a href="index.html"><img src="/storage/{{ $data_c1['logo'] }}"
+                                <a href="index.html"><img src="/storage/{{ $data_c1['logo'] ?? '' }}"
                                         alt=""></a>
                             </div>
                             <div class="vl-footer-text heading1 mt-16">

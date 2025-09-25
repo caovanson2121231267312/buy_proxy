@@ -1,7 +1,7 @@
 @extends('layouts.app_seo')
 
 @section('title')
-    {{ $data_c1['title'] }}
+    {{ $data_c1['title'] ?? '' }}
 @endsection
 
 @section('content')

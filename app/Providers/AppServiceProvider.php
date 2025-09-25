@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Exception;
 use App\Models\Proxy;
 use App\Models\Config;
 use Illuminate\Pagination\Paginator;
@@ -23,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrap();
+        try {
+            Paginator::useBootstrap();
         $user = auth()->id();
 
         $notifications = \App\Models\Notification::where('user_ids', 'LIKE', "%$user%")->latest()->take(100)->get();
@@ -43,5 +45,8 @@ class AppServiceProvider extends ServiceProvider
         View::share('data_proxy', $data_proxy);
         View::share('data_c1', $data_c1);
         View::share('data_c2', $data_c2);
+        } catch (Exception $e) {
+
+        }
     }
 }
