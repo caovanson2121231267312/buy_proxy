@@ -310,7 +310,7 @@
                                         </ul>
                                     </div>
                                     <div class="button">
-                                        <a href="#">Mua ngay</a>
+                                        <a href="https://buyproxy.vn/dashboard">Mua ngay</a>
                                     </div>
                                 </div>
                             </div>

@@ -424,15 +424,15 @@
         </div>
     </section>
 
-    @if (!empty($data_c2['note_1']) || !empty($data_c2['note_2']))
+    @if (!empty($data_c2['note_1'] ?? '') || !empty($data_c2['note_2'] ?? ''))
         <section class="content">
             <div class="container-fluid mt-4 px-4">
 
                 <div class="card card-primary card-outline mb-3 mt-3">
                     <div class="card-body">
-                        {!! $data_c2['note_1'] !!}
+                        {!! $data_c2['note_1'] ?? '' !!}
 
-                        {!! $data_c2['note_2'] !!}
+                        {!! $data_c2['note_2'] ?? '' !!}
                     </div>
                 </div>
             </div>
