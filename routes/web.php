@@ -5,6 +5,7 @@ use App\Http\Controllers\SeoController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CrawlController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProxyController;
 use App\Http\Controllers\ConfigController;
@@ -34,6 +35,8 @@ Auth::routes(['verify' => true]);
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    
+
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/my/orders', [App\Http\Controllers\HomeController::class, 'my_orders'])->name('my_orders');
     Route::get('/orders/export', [App\Http\Controllers\HomeController::class, 'export'])->name('orders.export');
@@ -63,6 +66,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/users/change-password/{id}', [UserController::class, 'changePassword'])->name('users.changePassword')->middleware('checkrole:1');
 
     Route::prefix('admin')->group(function () {
+        Route::get('/crawl', [CrawlController::class, 'index'])->name('crawl.index');
+        Route::post('/crawl', [CrawlController::class, 'crawl'])->name('crawl.submit');
+
         Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');

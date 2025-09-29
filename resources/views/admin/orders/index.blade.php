@@ -64,6 +64,7 @@
                                 <th>IP/User</th>
                                 <th>Gia hạn</th>
                                 <th width="420">Thông tin đăng ký</th>
+                                <th>Mã đăng ký</th>
                                 <th>Ngày Hết hạn</th>
                                 <th>Ngày mua</th>
                                 <th width="120">Hành động</th>
@@ -109,83 +110,102 @@
                                             ? '<span class="badge bg-success">ON</span>'
                                             : '<span class="badge bg-secondary">OFF</span>' !!}
                                     </td>
-                                    <td>
-                                        @if (!empty($order->payload_data))
-                                            <div class="payload-box table-cell-collapsed" id="payload-{{ $order->id }}">
-                                                @foreach ($order->payload_data as $item)
-                                                    <ul style="margin:0; padding-left: 15px;">
+                                   
+                                        <td>
+                                            {{-- @if ($order->type == 1) --}}
+                                                @if (!empty($order->payload_data))
+                                                    <div class="payload-box table-cell-collapsed"
+                                                        id="payload-{{ $order->id }}">
+                                                        @foreach ($order->payload_data as $item)
+                                                            <ul style="margin:0; padding-left: 15px;">
+                                                            
+                                                                {{-- @if(!empty($item['proxy_type']))
+                                                                    <li><b>Proxy Type:</b> {{ $item['proxy_type'] }}</li>
+                                                                @endif
+
+                                                                @if(!empty($item['package_name']))
+                                                                    <li><b>Package:</b> {{ $item['package_name'] }}</li>
+                                                                @endif --}}
+
+                                                                @if(!empty($item['package_api_key']))
+                                                                    <li><b>Package api key:</b> {{ $item['package_api_key'] }}</li>
+                                                                @endif
+
+                                                                {{-- @if(!empty($item['public_ip']))
+                                                                    <li><b>Public IP:</b> {{ $item['public_ip'] }}</li>
+                                                                @endif --}}
+                                                                @if(!empty($item['prevIp']))
+                                                                    <li><b>prevIp:</b> {{ $item['prevIp'] }}</li>
+                                                                @endif
+                                                                @if(!empty($item['domain']))
+                                                                    <li><b>Domain:</b> {{ $item['domain'] }}</li>
+                                                                @endif
+                                                                @if(!empty($item['port']))
+                                                                    <li><b>Port:</b> {{ $item['port'] }}</li>
+                                                                @endif
+                                                                @if(!empty($item['username']))
+                                                                    <li><b>Username:</b> {{ $item['username'] }}</li>
+                                                                @endif
+                                                                @if(!empty($item['password']))
+                                                                    <li><b>Password:</b> {{ $item['password'] }}</li>
+                                                                @endif
+
+                                                                @if(!empty($item['public_origin_ip']))
+                                                                    <li><b>Public Origin IP:</b> {{ $item['public_origin_ip'] }}</li>
+                                                                @endif
+
+                                                                {{-- @if(!empty($item['http_port']))
+                                                                    <li><b>Port http:</b> {{ $item['http_port'] }}</li>
+                                                                @endif --}}
+
+                                                                @if(!empty($item['https_port']))
+                                                                    <li><b>Port https:</b> {{ $item['https_port'] }}</li>
+                                                                @endif
+                                                                {{-- 
+                                                                @if(!empty($item['change_ip_time']))
+                                                                    <li><b>Change IP Time:</b> {{ $item['change_ip_time'] }}</li>
+                                                                @endif --}}
+
+                                                                @if(!empty($item['proxy_auth_ip']))
+                                                                    <li><b>Proxy Auth IP:</b> {{ $item['proxy_auth_ip'] }}</li>
+                                                                @endif
+
+                                                                {{-- @if(!empty($item['expired_date']))
+                                                                    <li><b>Expired:</b> {{ $item['expired_date'] }}</li>
+                                                                @endif
+
+                                                                @if(isset($item['auto_renew']))
+                                                                    <li><b>Gia hạn:</b> {{ $item['auto_renew'] ? 'ON' : 'OFF' }}</li>
+                                                                @endif --}}
+                                                            </ul>
+                                                        @endforeach
+
+                                                    </div>
+                                                    <button type="button" class="btn btn-link btn-sm toggle-payload"
+                                                        data-target="payload-{{ $order->id }}">
+                                                        Xem thêm
+                                                    </button>
+                                                @endif
+                                            {{-- @elseif ($order->type == 2)
+                                                Đang khởi tạo
+                                            @else
+                                                Đang khởi tạo
+                                            @endif --}}
+                                        </td>
+                                        <td>
+                               
+                                                @if (!empty($order->payload_data))
+                                                    <div class=""
+                                                        id="payload-{{ $order->id }}">
+                                                        @foreach ($order->payload_data as $item)
+                                                    
                                                         @if(!empty($item['id']))
-    <li><b>ID:</b> {{ $item['id'] }}</li>
-@endif
-
-@if(!empty($item['proxy_type']))
-    <li><b>Proxy Type:</b> {{ $item['proxy_type'] }}</li>
-@endif
-
-@if(!empty($item['package_name']))
-    <li><b>Package:</b> {{ $item['package_name'] }}</li>
-@endif
-
-@if(!empty($item['package_api_key']))
-    <li><b>Package api key:</b> {{ $item['package_api_key'] }}</li>
-@endif
-
-@if(!empty($item['public_ip']))
-    <li><b>Public IP:</b> {{ $item['public_ip'] }}</li>
-@endif
-@if(!empty($item['prevIp']))
-    <li><b>prevIp:</b> {{ $item['prevIp'] }}</li>
-@endif
-@if(!empty($item['domain']))
-    <li><b>Domain:</b> {{ $item['domain'] }}</li>
-@endif
-@if(!empty($item['port']))
-    <li><b>Port:</b> {{ $item['port'] }}</li>
-@endif
-@if(!empty($item['username']))
-    <li><b>Username:</b> {{ $item['username'] }}</li>
-@endif
-@if(!empty($item['password']))
-    <li><b>Password:</b> {{ $item['password'] }}</li>
-@endif
-
-@if(!empty($item['public_origin_ip']))
-    <li><b>Public Origin IP:</b> {{ $item['public_origin_ip'] }}</li>
-@endif
-
-@if(!empty($item['http_port']))
-    <li><b>Port http:</b> {{ $item['http_port'] }}</li>
-@endif
-
-@if(!empty($item['https_port']))
-    <li><b>Port https:</b> {{ $item['https_port'] }}</li>
-@endif
-
-@if(!empty($item['change_ip_time']))
-    <li><b>Change IP Time:</b> {{ $item['change_ip_time'] }}</li>
-@endif
-
-@if(!empty($item['proxy_auth_ip']))
-    <li><b>Proxy Auth IP:</b> {{ $item['proxy_auth_ip'] }}</li>
-@endif
-
-@if(!empty($item['expired_date']))
-    <li><b>Expired:</b> {{ $item['expired_date'] }}</li>
-@endif
-
-@if(isset($item['auto_renew']))
-    <li><b>Gia hạn:</b> {{ $item['auto_renew'] ? 'ON' : 'OFF' }}</li>
-@endif
-                                                    </ul>
-                                                @endforeach
-                                            </div>
-                                            <button type="button" class="btn btn-link btn-sm toggle-payload"
-                                                data-target="payload-{{ $order->id }}">
-                                                Xem thêm
-                                            </button>
-                                        @endif
-
-                                    </td>
+                                                            {{ $item['id'] }}
+                                                        @endif
+                                                   
+                                                        @endforeach
+                                                @endif
+                                        </td>
                                     <td>{{ $order->end_date ? $order->end_date->format('d/m/Y') : '-' }}</td>
                                     <td>{{ $order->created_at ? $order->created_at->format('d/m/Y') : '-' }}</td>
                                     <td>

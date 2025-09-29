@@ -4,6 +4,7 @@
     <div class="container mt-4 mb-4">
         <h2 class="mb-4">Quản lý tin tức</h2>
         <a href="{{ route('posts.create') }}" class="btn btn-primary mb-3">+ Thêm mới</a>
+        <a href="{{ route('crawl.index') }}" class="btn btn-info mb-3">+ Cào Bài viết</a>
 
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
