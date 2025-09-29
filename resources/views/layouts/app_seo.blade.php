@@ -222,7 +222,19 @@
         @if (session('info'))
             toastr.info("{{ session('info') }}");
         @endif
+    
+
+        function copyHtml(elementId) {
+            let el = document.getElementById(elementId);
+            let range = document.createRange();
+            range.selectNode(el);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            alert("Đã copy nội dung HTML!");
+        }
     </script>
+
 
 </body>
 

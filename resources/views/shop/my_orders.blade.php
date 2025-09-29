@@ -284,6 +284,10 @@
             z-index: 10;
         }
 
+        .cs {
+            cursor: pointer;
+        }
+
         .rating {
             color: #ffc107;
             margin: 10px 0;
@@ -394,13 +398,13 @@
                                     <th>Giá/1</th>
                                     <th>Tổng</th>
                                     <th>Auth</th>
-                                    <th>Tài khoản đăng nhập</th>
+                                    <th width="350">Tài khoản đăng nhập</th>
                                     <th>Auto Renew</th>
-                                    <th width="420">Thông tin đăng ký</th>
+                                    <th width="480">Thông tin đăng ký</th>
                                     <th>Mã đăng ký</th>
                                     <th>Hết hạn</th>
                                     <th>Trạng thái</th>
-                                    <th>Action</th>
+                                    <th width="430">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -417,8 +421,12 @@
                                             @if ($order->auth_type == 'ip')
                                                 {{-- {{ $order->ip_address }} --}}
                                             @else
-                                                <span class="text-primary">{{ $order->username }}</span> /
-                                                <span class="text-danger">{{ $order->password }}</span>
+                                                <div>
+                                                    username: <span class="text-primary">{{ $order->username }}</span>  <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $order->username }}')"> <i class="bi bi-clipboard"></i></span>
+                                                </div>
+                                                <div>
+                                                    password: <span class="text-danger">{{ $order->password }}</span>  <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $order->password }}')"> <i class="bi bi-clipboard"></i></span>
+                                                </div>
                                             @endif
                                         </td>
                                         <td>
@@ -443,30 +451,30 @@
                                                                 @endif --}}
 
                                                                 @if(!empty($item['package_api_key']))
-                                                                    <li><b>Package api key:</b> {{ $item['package_api_key'] }}</li>
+                                                                    <li><b>Package api key:</b> {{ $item['package_api_key'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['package_api_key'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
 
                                                                 {{-- @if(!empty($item['public_ip']))
                                                                     <li><b>Public IP:</b> {{ $item['public_ip'] }}</li>
                                                                 @endif --}}
                                                                 @if(!empty($item['prevIp']))
-                                                                    <li><b>prevIp:</b> {{ $item['prevIp'] }}</li>
+                                                                    <li><b>prevIp:</b> {{ $item['prevIp'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['prevIp'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
                                                                 @if(!empty($item['domain']))
-                                                                    <li><b>Domain:</b> {{ $item['domain'] }}</li>
+                                                                    <li><b>Domain:</b> {{ $item['domain'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['domain'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
                                                                 @if(!empty($item['port']))
-                                                                    <li><b>Port:</b> {{ $item['port'] }}</li>
+                                                                    <li><b>Port:</b> {{ $item['port'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['port'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
                                                                 @if(!empty($item['username']))
-                                                                    <li><b>Username:</b> {{ $item['username'] }}</li>
+                                                                    <li><b>Username:</b> {{ $item['username'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['username'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
                                                                 @if(!empty($item['password']))
-                                                                    <li><b>Password:</b> {{ $item['password'] }}</li>
+                                                                    <li><b>Password:</b> {{ $item['password'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['password'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
 
                                                                 @if(!empty($item['public_origin_ip']))
-                                                                    <li><b>Public Origin IP:</b> {{ $item['public_origin_ip'] }}</li>
+                                                                    <li><b>Public Origin IP:</b> {{ $item['public_origin_ip'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['public_origin_ip'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
 
                                                                 {{-- @if(!empty($item['http_port']))
@@ -474,7 +482,7 @@
                                                                 @endif --}}
 
                                                                 @if(!empty($item['https_port']))
-                                                                    <li><b>Port https:</b> {{ $item['https_port'] }}</li>
+                                                                    <li><b>Port https:</b> {{ $item['https_port'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['https_port'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
                                                                 {{-- 
                                                                 @if(!empty($item['change_ip_time']))
@@ -482,7 +490,7 @@
                                                                 @endif --}}
 
                                                                 @if(!empty($item['proxy_auth_ip']))
-                                                                    <li><b>Proxy Auth IP:</b> {{ $item['proxy_auth_ip'] }}</li>
+                                                                    <li><b>Proxy Auth IP:</b> {{ $item['proxy_auth_ip'] }} <span title="Copy" class="ms-2 cs" onclick="copyText('{{ $item['proxy_auth_ip'] }}')"> <i class="bi bi-clipboard"></i></span></li>
                                                                 @endif
 
                                                                 {{-- @if(!empty($item['expired_date']))
@@ -633,6 +641,14 @@
     </section>
 
     <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                toastr.success("Đã copy: " + text);
+            }).catch(err => {
+                console.error("Copy thất bại", err);
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".toggle-payload").forEach(function(btn) {
                 btn.addEventListener("click", function() {
