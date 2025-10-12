@@ -51,11 +51,12 @@ class TestFun extends Command
                         // dump(preg_match('/\.?(BUYPROXY[0-9]+)\./', $value['description'], $matches));
                         continue;
                     }
-                    // dump($transactions['transactions']);
+                    // dd($transactions['transactions']);
 
-                    if (preg_match('/\.?(BUYPROXY[0-9]+)\./', $value['description'], $matches)) {
-                        $code = $matches[1];
-                        $user = User::where('id', str_replace("BUYPROXY", "", $code))->first();
+                    if (preg_match('/BUYPROXY\d+/i', $value['description'], $matches)) {
+                        $code = $matches[0];
+                        $userId = str_replace("BUYPROXY", "", $code);
+                        $user = User::find($userId);
                         if (!empty($user)) {
                             $data_insert['user_id'] = $user->id;
                             $data_insert['status'] = 'success';

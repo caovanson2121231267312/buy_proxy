@@ -9,6 +9,7 @@ use App\Models\Proxy;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Exports\OrdersExport;
+use App\Console\Commands\TestFun;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,6 +23,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        TestFun::CheckTrans();
     }
 
     /**
@@ -128,6 +130,17 @@ class HomeController extends Controller
                 if (!empty(json_decode($order->payload, true)['Data'])) {
                     $order->type = 1;
                     $order->payload_data = json_decode($order->payload, true)['Data'] ?? [];
+                    // dd($order->payload_data);
+                    if(!empty($order->payload_data) && !empty($order->payload_data[0])) {
+                        $url = 'https://api.m2proxy.com/user/data/getlistproxy?token=' . $order->proxy->api_call->token . '&package_id=' . $order->payload_data[0]['package_api_key'];
+                        $response = Http::withToken($order->proxy->api_call->token) // ở đây author chính là token
+                            ->get($url);
+
+                            // dd($url, $response->json());
+                            if($response->json()['Status'] == "success") {
+                                $order->payload_data = $response->json()['Data'];
+                            }
+                    }
                 } else {
                     // dd(json_decode($order->payload, true)['products'][0]);
                     try {
@@ -275,6 +288,13 @@ class HomeController extends Controller
                 $response = Http::withToken($data->proxy->api_call->token) // ở đây author chính là token
                     ->get("https://api.m2proxy.com/user/package/edit?package_api_key=$package_api_key&proxy_auth_type=$data_ip&proxy_auth_ip=$ip&proxy_auth_username=$username&proxy_auth_password=$password&auto_changeip_time=$time&auto_renew=false");
                 $res = $response->json();
+
+                $data->update([
+                    "auth_type" => $data_ip,
+                    "ip_address" => $ip,
+                    "username" => $username,
+                    "password" => $password,
+                ]);
 
                 if ($res['Status'] == 'error') {
                     return redirect()->back()->with('success', 'Proxy hết hạn không thể cập nhật');

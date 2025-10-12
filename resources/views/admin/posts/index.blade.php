@@ -33,7 +33,11 @@
                                     @endif
                                 </div>
                             </td>
-                            <td>{{ $post->title }}</td>
+                            <td>
+                                <a href="{{ route('seo.posts.show', ['slug' =>  $post->slug]) }}">
+                                    {{ $post->title }}
+                                </a>
+                            </td>
                             <td>{{ $post->user->name ?? 'N/A' }}</td>
                             <td>{{ $post->status ? 'hiện' : 'ẩn' }}</td>
                             <td>

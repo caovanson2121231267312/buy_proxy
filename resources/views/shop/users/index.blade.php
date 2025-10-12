@@ -15,15 +15,15 @@
                 <div>
                     <form method="GET" action="{{ route('users.index') }}" class=" w-100">
                         <div class="row">
-                            <div class="col-12 col-lg-3">
+                            <div class="col-12 col-lg-3 mb-2">
                                 <input type="text" name="search" class="form-control me-2"
                                     placeholder="Tìm kiếm theo tên hoặc email..." value="{{ request('search') }}">
                             </div>
-                            <div class="col-12 col-lg-3">
+                            <div class="col-12 col-lg-3 mb-2">
                                 <input type="text" name="phone" class="form-control me-2"
                                     placeholder="Tìm kiếm theo phone..." value="{{ request('phone') }}">
                             </div>
-                            <div class="col-12 col-lg-1">
+                            <div class="col-12 col-lg-1 mb-2">
                                 <select name="show" class="form-select me-2">
                                     <option value="10" @if (request('show') == 10) selected @endif>10</option>
                                     <option value="20" @if (request('show') == 20) selected @endif>20</option>
@@ -35,7 +35,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 col-lg-3 row g-3 align-items-center mt-0">
+                            <div class="col-12 col-lg-3 row g-3 align-items-center mt-0 mb-2">
                                 <div class="col-auto mt-0">
                                     <label for="inputPassword6" class="col-form-label">Sắp xếp</label>
                                 </div>
@@ -84,7 +84,7 @@
                         <tbody>
                             @foreach ($users as $i => $user)
                                 <tr>
-                                    <td>{{ $i + 1 }}</td>
+                                    <td>BUYPROXY{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone ?? 'Chưa cập nhật' }}</td>
@@ -110,18 +110,18 @@
                                     <td>{{ $user->created_at->format('d/m/Y') }}</td>
                                     <td>
                                         <!-- Btn cập nhật -->
-                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                        <button class="btn btn-sm btn-success mb-2" data-bs-toggle="modal"
                                             data-bs-target="#updateModalMoney{{ $user->id }}">
                                             Nạp - trừ tiền
                                         </button>
 
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                        <button class="btn btn-sm btn-warning mb-2" data-bs-toggle="modal"
                                             data-bs-target="#updateModal{{ $user->id }}">
                                             Sửa
                                         </button>
 
                                         <!-- Btn đổi mật khẩu -->
-                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                        <button class="btn btn-sm btn-danger mb-2" data-bs-toggle="modal"
                                             data-bs-target="#passwordModal{{ $user->id }}">
                                             Đổi mật khẩu
                                         </button>
