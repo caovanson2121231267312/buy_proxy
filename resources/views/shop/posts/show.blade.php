@@ -1,12 +1,33 @@
 @extends('layouts.app_seo')
 
+@section('title')
+    {{ $post->title }}
+@endsection
+@section('meta')
+    <meta name="description" content="{{ $post->description }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ $post->description }}">
+    <meta property="og:image" content="{{ asset('storage/' . $post->image) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Tin tức kinh tế - tài chính - công nghệ">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $post->title }}">
+    <meta name="twitter:description" content="{{ $post->description }}">
+    <meta name="twitter:image" content="{{ asset('storage/' . $post->image) }}">
+@endsection
+
 @section('content')
     <div class="inner-hero1 pt-60" style="background-image: url({{ asset('seo/assets/img/bg/inner-hero1-bg.jpg') }});">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-5">
+                <div class="col-md-7">
                     <div class="main-heading1">
-                        <h1>Bài viết</h1>
+                        <h1 class="text-light">{{ $post->title }}</h1>
                         <div class="breadcrumbs-pages">
                             <ul>
                                 {{-- <li><a href="{{ route('home_index') }}">Trang chủ</a></li> --}}
@@ -16,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-5">
                     <div class="images">
                         <img src="{{ asset('seo/assets/img/images/inner-hero-image1.png') }}" alt="">
                     </div>
@@ -50,4 +71,15 @@
     </div>
 </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+    img {
+        height: auto;
+        width: 100%;
+        border-radius: 0;
+    }
+   
+}
+</style>
 @endsection

@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        // Post::where('id', 6)->delete();
+        // Post::where('id', 16)->delete();
         $posts = Post::with('user')->latest()->paginate(10);
 
         // dd($posts);

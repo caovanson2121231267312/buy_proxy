@@ -3,6 +3,13 @@
 @section('title')
     {{ $data_c1['title'] ?? '' }}
 @endsection
+@section('meta')
+<meta name="description" content="{{ $data_c1['description'] ?? 'Mua proxy Việt Nam & quốc tế tốc độ cao, ổn định, bảo mật tuyệt đối. Hỗ trợ HTTP/SOCKS5, IP riêng, dùng cho SEO, marketing, và automation. Dịch vụ proxy tốt nhất tại buyproxy.vn.' }}">
+<meta name="keywords" content="proxy việt nam, proxy quốc tế, proxy tốc độ cao, proxy riêng, proxy bảo mật, proxy SEO, proxy marketing, mua proxy giá rẻ, socks5, ipv4, buyproxy.vn">
+<meta name="robots" content="index, follow">
+<meta name="author" content="buyproxy.vn">
+<link rel="canonical" href="https://buyproxy.vn/">
+@endsection
 
 @section('content')
     <!--==== HERO AREA START ==== -->

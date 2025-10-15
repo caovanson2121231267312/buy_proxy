@@ -27,7 +27,7 @@ use App\Http\Controllers\NotificationController;
 
 Route::get('/', [SeoController::class, 'index'])->name('home_index');
 Route::get('/bai-viet', [SeoController::class, 'blog'])->name('blog');
-Route::get('/posts/{slug}', [SeoController::class, 'show'])->name('seo.posts.show');
+Route::get('/bai-viet/{slug}', [SeoController::class, 'show'])->name('seo.posts.show');
 Route::get('/lien-he', [SeoController::class, 'lien_he'])->name('lien_he');
 Route::post('/submit_lien_he', [SeoController::class, 'submit_lien_he'])->name('submit_lien_he');
 

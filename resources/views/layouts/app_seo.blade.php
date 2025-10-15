@@ -8,7 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', $data_c1['title'] ?? '')</title>
-    <meta name="robots" content="noindex, nofollow">
+
+    @yield('meta')
+    {{-- <meta name="robots" content="noindex, nofollow"> --}}
     @if (!empty($data_c1['icon']))
         <link rel="icon" type="image/png" href="/storage/{{ $data_c1['icon'] }}" />
     @endif

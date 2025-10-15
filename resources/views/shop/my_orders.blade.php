@@ -443,13 +443,13 @@
                                                             <ul style="margin:0; padding-left: 15px;">
                                                                 @if ($order->type == 1)
                                                                      <li><b>http(s):</b> 
-                                                                        {{$item['public_origin_ip']}}:{{ $item['https_port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['usernapasswordme'] ) }}
-                                                                        <span title="Copy" class="ms-2 cs" onclick="copyText('{{$item['public_origin_ip']}}:{{ $item['https_port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['usernapasswordme'] ) }}')"> <i class="bi bi-clipboard"></i></span>
+                                                                        {{$item['public_origin_ip']}}:{{ $item['https_port'] ?? $item['port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['password'] ) }}
+                                                                        <span title="Copy" class="ms-2 cs" onclick="copyText('{{$item['public_origin_ip']}}:{{ $item['https_port'] ?? $item['port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['password'] ) }}')"> <i class="bi bi-clipboard"></i></span>
                                                                     </li>
                                                                 @else
                                                                 <li><b>http(s):</b> 
-                                                                        {{$item['public_origin_ip']}}:{{ $item['https_port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['usernapasswordme'] ) }}
-                                                                        <span title="Copy" class="ms-2 cs" onclick="copyText('{{$item['public_origin_ip']}}:{{ $item['https_port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['usernapasswordme'] ) }}')"> <i class="bi bi-clipboard"></i></span>
+                                                                        {{$item['public_origin_ip']}}:{{ $item['https_port'] ?? $item['port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['password'] ) }}
+                                                                        <span title="Copy" class="ms-2 cs" onclick="copyText('{{$item['public_origin_ip']}}:{{ $item['https_port'] ?? $item['port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['password'] ) }}')"> <i class="bi bi-clipboard"></i></span>
                                                                     </li>
                                                                 @endif
                                                                 {{-- @if(!empty($item['proxy_type']))

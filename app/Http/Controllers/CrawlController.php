@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,7 @@ class CrawlController extends Controller
         // Danh sách domain bạn muốn cho user chọn
         $domains = [
             'vnexpress.net' => 'VNExpress',
-            // 'dantri.com.vn' => 'Dân Trí',
+            'wwproxy.com' => 'wwproxy',
             // 'thanhnien.vn'  => 'Thanh Niên',
         ];
 
@@ -39,14 +40,14 @@ class CrawlController extends Controller
             // Lấy HTML
             $html = file_get_contents($url);
             if (preg_match('/<article[^>]*class="[^"]*fck_detail[^"]*"[^>]*>(.*?)<\/article>/is', $html, $match)) {
-    $article = $match[1];
+                $article = $match[1];
 
-    // Loại bỏ href trong tất cả thẻ <a>
-    $article = preg_replace('/\s*href\s*=\s*"[^"]*"/i', '', $article);
+                // Loại bỏ href trong tất cả thẻ <a>
+                $article = preg_replace('/\s*href\s*=\s*"[^"]*"/i', '', $article);
 
-    // Gắn lại vào nội dung ban đầu
-    $html = str_replace($match[1], $article, $html);
-}
+                // Gắn lại vào nội dung ban đầu
+                $html = str_replace($match[1], $article, $html);
+            }
 
 
             $crawler = new Crawler($html);
@@ -138,26 +139,23 @@ class CrawlController extends Controller
                         : '';
                     break;
 
-                case 'dantri.com.vn':
-                    $title = $crawler->filter('header h1')->count()
-                        ? $crawler->filter('header h1')->text()
+                case 'wwproxy.com':
+                    $title = $crawler->filter('.post-title h2')->count()
+                        ? $crawler->filter('.post-title h2')->text()
                         : ($crawler->filter('meta[property="og:title"]')->count()
                             ? $crawler->filter('meta[property="og:title"]')->attr('content')
                             : '');
 
-                    $description = $crawler->filter('header p')->count()
-                        ? $crawler->filter('header p')->text()
-                        : ($crawler->filter('meta[property="og:description"]')->count()
-                            ? $crawler->filter('meta[property="og:description"]')->attr('content')
-                            : '');
+                    $description = $title;
 
-                    $content = $crawler->filter('div.dt-singular-content')->count()
-                        ? $crawler->filter('div.dt-singular-content')->html()
+                    $content = $crawler->filter('div.post-content')->count()
+                        ? $crawler->filter('div.post-content')->html()
                         : '';
 
-                    $image = $crawler->filter('meta[property="og:image"]')->count()
-                        ? $crawler->filter('meta[property="og:image"]')->attr('content')
+                    $image = $crawler->filter('.post-image')->count()
+                        ? $crawler->filter('.post-image img')->attr('src')
                         : '';
+                    // dd($image);
                     break;
 
                 case 'thanhnien.vn':
@@ -203,18 +201,43 @@ class CrawlController extends Controller
 
             // ✅ Lưu ảnh đại diện (nếu có)
             $localImagePath = null;
+
             if ($image) {
                 try {
-                    $response = Http::get($image);
-                    if ($response->successful()) {
-                        $filename = 'post_' . time() . '.jpg';
-                        Storage::disk('public')->put('posts/' . $filename, $response->body());
+                    if (Str::startsWith($image, 'data:image')) {
+                        // Ảnh base64
+                        preg_match('/^data:image\/(\w+);base64,/', $image, $type);
+                        $imageData = substr($image, strpos($image, ',') + 1);
+                        $imageData = base64_decode($imageData);
+
+                        $extension = $type[1] ?? 'png'; // mặc định PNG
+                        $filename = 'post_' . time() . '.' . $extension;
+
+                        Storage::disk('public')->put('posts/' . $filename, $imageData);
                         $localImagePath = 'posts/' . $filename;
+                    } else {
+                        // Ảnh dạng URL thông thường
+                        $response = Http::get($image);
+                        if ($response->successful()) {
+                            $extension = pathinfo(parse_url($image, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+                            $filename = 'post_' . time() . '.' . $extension;
+                            Storage::disk('public')->put('posts/' . $filename, $response->body());
+                            $localImagePath = 'posts/' . $filename;
+                        }
                     }
                 } catch (\Exception $e) {
                     Log::error('Không thể tải ảnh: ' . $e->getMessage());
                 }
             }
+
+            // dd([
+            //     'title'       => $title,
+            //     'content'     => $content,
+            //     'description' => $description,
+            //     'user_id'     => auth()->id(),
+            //     'status'      => $request->status,
+            //     'image'       => $localImagePath ?? null,
+            // ]);
 
             // ✅ Lưu bài viết
             Post::create([

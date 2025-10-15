@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Services\Web2mService;
+use Exception;
 use Illuminate\Console\Command;
 
 class TestFun extends Command
@@ -32,51 +33,55 @@ class TestFun extends Command
     }
 
 
-    public static function CheckTrans() {
-        $web2m = new Web2mService();
-        $transactions = $web2m->getTransactions();
+    public static function CheckTrans()
+    {
+        try {
+            $web2m = new Web2mService();
+            $transactions = $web2m->getTransactions();
 
-        // dump($transactions['transactions']);
-        if ($transactions['transactions']) {
+            dd($transactions);
+            if ($transactions['transactions']) {
 
-            foreach ($transactions['transactions'] as $value) {
-                if ($value['type'] == "IN") {
-                    $data_insert = [];
-                    $data_insert['transactionID'] = $value['transactionID'];
-                    $data_insert['amount'] = $value['amount'];
-                    $data_insert['note'] = $value['description'];
-                    $data_insert['method'] = 'bank';
-                    $data_check = Transaction::where("transactionID", $value['transactionID'])->first();
-                    if(!empty($data_check)) {
-                        // dump(preg_match('/\.?(BUYPROXY[0-9]+)\./', $value['description'], $matches));
-                        continue;
-                    }
-                    // dd($transactions['transactions']);
+                foreach ($transactions['transactions'] as $value) {
+                    if ($value['type'] == "IN") {
+                        $data_insert = [];
+                        $data_insert['transactionID'] = $value['transactionID'];
+                        $data_insert['amount'] = $value['amount'];
+                        $data_insert['note'] = $value['description'];
+                        $data_insert['method'] = 'bank';
+                        $data_check = Transaction::where("transactionID", $value['transactionID'])->first();
+                        if (!empty($data_check)) {
+                            // dump(preg_match('/\.?(BUYPROXY[0-9]+)\./', $value['description'], $matches));
+                            continue;
+                        }
+                        // dd($transactions['transactions']);
 
-                    if (preg_match('/BUYPROXY\d+/i', $value['description'], $matches)) {
-                        $code = $matches[0];
-                        $userId = str_replace("BUYPROXY", "", $code);
-                        $user = User::find($userId);
-                        if (!empty($user)) {
-                            $data_insert['user_id'] = $user->id;
-                            $data_insert['status'] = 'success';
+                        if (preg_match('/BUYPROXY\d+/i', $value['description'], $matches)) {
+                            $code = $matches[0];
+                            $userId = str_replace("BUYPROXY", "", $code);
+                            $user = User::find($userId);
+                            if (!empty($user)) {
+                                $data_insert['user_id'] = $user->id;
+                                $data_insert['status'] = 'success';
 
-                            $user->update([
-                                "price" => $user->price +  $value['amount'],
-                            ]);
+                                $user->update([
+                                    "price" => $user->price +  $value['amount'],
+                                ]);
+                            } else {
+                                $data_insert['status'] = 'pending';
+                            }
                         } else {
+                            $code = null;
                             $data_insert['status'] = 'pending';
                         }
-                    } else {
-                        $code = null;
-                        $data_insert['status'] = 'pending';
+
+                        // dd($data_insert);
+
+                        Transaction::create($data_insert);
                     }
-
-                    // dd($data_insert);
-
-                    Transaction::create($data_insert);
                 }
             }
+        } catch (Exception $e) {
         }
     }
 }

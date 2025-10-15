@@ -64,14 +64,14 @@
                         <p>Tích hợp api</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-toolbox mt-1"></i>
                         <p>Tool hỗ trợ</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('blog')}}" class="nav-link">
                         <i class="fas fa-file mt-1"></i>
                         <p>Tin tức & Hướng dẫn</p>
                     </a>
