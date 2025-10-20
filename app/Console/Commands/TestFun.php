@@ -39,7 +39,7 @@ class TestFun extends Command
             $web2m = new Web2mService();
             $transactions = $web2m->getTransactions();
 
-            dd($transactions);
+            // dd($transactions);
             if ($transactions['transactions']) {
 
                 foreach ($transactions['transactions'] as $value) {

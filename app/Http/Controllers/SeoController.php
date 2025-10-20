@@ -11,6 +11,7 @@ class SeoController extends Controller
 {
     public function index(Request $request)
     {
+        // dd(123);
         $data = Proxy::where('status', 1)->where('api_id', 1)
                     ->get()
                     ->groupBy('proxy_type');

@@ -22,6 +22,38 @@
             background: linear-gradient(to top, white, transparent);
         }
     </style>
+    <style>
+    .payload-card {
+        background: #fafafa;
+        transition: all 0.25s ease;
+    }
+
+    .payload-card:hover {
+        background: #f0f7ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1);
+    }
+
+    .payload-line {
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .payload-line code {
+        font-family: monospace;
+    }
+
+    .copy-btn {
+        cursor: pointer;
+        color: #007bff;
+        transition: 0.2s;
+    }
+
+    .copy-btn:hover {
+        color: #0056b3;
+    }
+</style>
+
     <div class="container mt-4">
 
         @if (session('success'))
@@ -64,7 +96,7 @@
                                 <th>IP/User</th>
                                 <th>Gia hạn</th>
                                 <th width="420">Thông tin đăng ký</th>
-                                <th>Mã đăng ký</th>
+                                {{-- <th>Mã đăng ký</th> --}}
                                 <th>Ngày Hết hạn</th>
                                 <th>Ngày mua</th>
                                 <th width="120">Hành động</th>
@@ -112,8 +144,9 @@
                                     </td>
                                    
                                         <td>
-                                            {{-- @if ($order->type == 1) --}}
-                                                @if (!empty($order->payload_data))
+                                            <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#detailOrder{{ $order->id }}">Chi tiết</button>
+                                                {{-- @if (!empty($order->payload_data))
                                                     <div class="payload-box table-cell-collapsed"
                                                         id="payload-{{ $order->id }}">
                                                         @foreach ($order->payload_data as $item)
@@ -129,22 +162,12 @@
                                                                         <span title="Copy" class="ms-2 cs" onclick="copyText('{{$item['public_origin_ip']}}:{{ $item['https_port'] ?? $item['port'] }}{{ empty($item['username']) ? '' : (':'.$item['username'] . ':') }}{{ empty($item['password']) ? '' : ($item['password'] ) }}')"> <i class="bi bi-clipboard"></i></span>
                                                                     </li>
                                                                 @endif
-                                                            
-                                                                {{-- @if(!empty($item['proxy_type']))
-                                                                    <li><b>Proxy Type:</b> {{ $item['proxy_type'] }}</li>
-                                                                @endif
-
-                                                                @if(!empty($item['package_name']))
-                                                                    <li><b>Package:</b> {{ $item['package_name'] }}</li>
-                                                                @endif --}}
+ 
 
                                                                 @if(!empty($item['package_api_key']))
                                                                     <li><b>Package api key:</b> {{ $item['package_api_key'] }}</li>
                                                                 @endif
 
-                                                                {{-- @if(!empty($item['public_ip']))
-                                                                    <li><b>Public IP:</b> {{ $item['public_ip'] }}</li>
-                                                                @endif --}}
                                                                 @if(!empty($item['prevIp']))
                                                                     <li><b>prevIp:</b> {{ $item['prevIp'] }}</li>
                                                                 @endif
@@ -165,29 +188,16 @@
                                                                     <li><b>Public Origin IP:</b> {{ $item['public_origin_ip'] }}</li>
                                                                 @endif
 
-                                                                {{-- @if(!empty($item['http_port']))
-                                                                    <li><b>Port http:</b> {{ $item['http_port'] }}</li>
-                                                                @endif --}}
-
                                                                 @if(!empty($item['https_port']))
                                                                     <li><b>Port https:</b> {{ $item['https_port'] }}</li>
                                                                 @endif
-                                                                {{-- 
-                                                                @if(!empty($item['change_ip_time']))
-                                                                    <li><b>Change IP Time:</b> {{ $item['change_ip_time'] }}</li>
-                                                                @endif --}}
+               
 
                                                                 @if(!empty($item['proxy_auth_ip']))
                                                                     <li><b>Proxy Auth IP:</b> {{ $item['proxy_auth_ip'] }}</li>
                                                                 @endif
 
-                                                                {{-- @if(!empty($item['expired_date']))
-                                                                    <li><b>Expired:</b> {{ $item['expired_date'] }}</li>
-                                                                @endif
-
-                                                                @if(isset($item['auto_renew']))
-                                                                    <li><b>Gia hạn:</b> {{ $item['auto_renew'] ? 'ON' : 'OFF' }}</li>
-                                                                @endif --}}
+                        
                                                             </ul>
                                                         @endforeach
 
@@ -196,14 +206,10 @@
                                                         data-target="payload-{{ $order->id }}">
                                                         Xem thêm
                                                     </button>
-                                                @endif
-                                            {{-- @elseif ($order->type == 2)
-                                                Đang khởi tạo
-                                            @else
-                                                Đang khởi tạo
-                                            @endif --}}
+                                                @endif --}}
+            
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                
                                                 @if (!empty($order->payload_data))
                                                     <div class=""
@@ -216,7 +222,7 @@
                                                    
                                                         @endforeach
                                                 @endif
-                                        </td>
+                                        </td> --}}
                                     <td>{{ $order->end_date ? $order->end_date->format('d/m/Y') : '-' }}</td>
                                     <td>{{ $order->created_at ? $order->created_at->format('d/m/Y') : '-' }}</td>
                                     <td>
@@ -224,6 +230,72 @@
                                             data-bs-target="#editOrder{{ $order->id }}">Sửa</button>
                                     </td>
                                 </tr>
+                              
+                                <div class="modal fade" id="detailOrder{{ $order->id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                    <h5 class="modal-title">Chi tiết Order #{{ $order->id }}</h5>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                               <div class="modal-body" style="max-height: 800px; overflow-y: auto;">
+    @if (!empty($order->payload_data))
+        @foreach ($order->payload_data as $key => $item)
+            <div class="payload-card p-3 mb-3 shadow-sm border rounded">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-primary">#{{ $key + 1 }}</span>
+                    <span class="badge bg-light text-dark">
+                        {{ $order->type == 1 ? 'HTTP(S)' : 'SOCKS' }}
+                    </span>
+                </div>
+
+                <div class="payload-line">
+                    <b class="text-secondary">Proxy:</b>
+                    <code class="text-dark bg-light px-2 py-1 rounded d-inline-block">
+                        {{ $item['public_origin_ip'] }}:{{ $item['https_port'] ?? $item['port'] }}
+                        {{ empty($item['username']) ? '' : (':' . $item['username'] . ':') }}
+                        {{ empty($item['password']) ? '' : $item['password'] }}
+                    </code>
+                    <span class="copy-btn ms-2" title="Copy"
+                        onclick="copyText('{{ $item['public_origin_ip'] }}:{{ $item['https_port'] ?? $item['port'] }}')">
+                        <i class="bi bi-clipboard"></i>
+                    </span>
+                </div>
+
+                @if(!empty($item['package_api_key']))
+                    <div class="payload-line">
+                        <b class="text-secondary">Package API Key:</b>
+                        <span class="text-dark">{{ $item['package_api_key'] }}</span>
+                    </div>
+                @endif
+
+                @if(!empty($item['domain']))
+                    <div class="payload-line">
+                        <b class="text-secondary">Domain:</b>
+                        <span class="text-dark">{{ $item['domain'] }}</span>
+                    </div>
+                @endif
+
+                @if(!empty($item['id']))
+                    <div class="payload-line">
+                        <b class="text-secondary">Mã đăng ký:</b>
+                        <span class="fw-semibold text-success">{{ $item['id'] }}</span>
+                    </div>
+                @endif
+            </div>
+        @endforeach
+    @else
+        <div class="text-center text-muted py-3">
+            Không có dữ liệu hiển thị
+        </div>
+    @endif
+</div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Modal -->
                                 <div class="modal fade" id="editOrder{{ $order->id }}" tabindex="-1">

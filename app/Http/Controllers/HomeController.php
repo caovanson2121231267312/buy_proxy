@@ -122,47 +122,62 @@ class HomeController extends Controller
             });
         }
 
-        $orders = $query->where('user_id', auth()->user()->id)->orderBy('id', 'desc')->paginate(15);
+        $orders = $query->where('user_id', auth()->user()->id)->orderBy('id', 'desc')->paginate(8);
         foreach ($orders as $order) {
+
             $order->type = 3;
             if ($order->payload) {
                 $payload = json_decode($order->payload);
                 if (!empty(json_decode($order->payload, true)['Data'])) {
+                    // $order->type = 1;
+                    // $order->payload_data = json_decode($order->payload, true)['Data'] ?? [];
                     $order->type = 1;
                     $order->payload_data = json_decode($order->payload, true)['Data'] ?? [];
-                    // dd($order->payload_data);
-                    if(!empty($order->payload_data) && !empty($order->payload_data[0])) {
-                        $url = 'https://api.m2proxy.com/user/data/getlistproxy?token=' . $order->proxy->api_call->token . '&package_id=' . $order->payload_data[0]['package_api_key'];
-                        $response = Http::withToken($order->proxy->api_call->token) // ở đây author chính là token
-                            ->get($url);
+                    // dd($order);
+                    if (!empty($order->payload_data) && !empty($order->payload_data[0])) {
+                        // dd($order->payload_data);
 
-                            // dd($url, $response->json());
-                            if($response->json()['Status'] == "success") {
-                                $order->payload_data = $response->json()['Data'];
+                        $arr_data_res = [];
+
+                        // $url = 'https://api.m2proxy.com/user/data/getlistproxy?token=' . $order->proxy->api_call->token . '&package_id=' . $order->payload_data[0]['id'];
+                        try {
+                            $url = 'https://api.m2proxy.com/user/data/getlistproxy?token=' . $order->proxy->api_call->token;
+                            $response = Http::withToken($order->proxy->api_call->token)
+                                ->get($url);
+                            if ($response->json()['Status'] == "success") {
+                                $list_data = $response->json()['Data'];
+
+                                if ($list_data) {
+                                    foreach ($list_data as $value_list) {
+                                        foreach ($order->payload_data as $value_payload) {
+                                            if ($value_payload['id']  == $value_list['id']) {
+                                                $arr_data_res[] = $value_list;
+                                            }
+                                        }
+                                    }
+                                }
                             }
+                            $order->payload_data = $arr_data_res;
+                        } catch (Exception $e) {
+                            $order->payload_data = $arr_data_res;
+                        }
                     }
                 } else {
-                    // dd(json_decode($order->payload, true)['products'][0]);
                     try {
                         $order->type = 2;
                         $payload = json_decode($order->payload, true)['products'] ?? [];
                         $id = $payload[0]['order']['id'] ?? 0;
-                        // dd(json_decode($order->payload, true), $id);
 
                         $response = Http::withToken($order->proxy->api_call->token) // ở đây author chính là token
                             ->get('https://api.homeproxy.vn/api/merchant/proxies?filter=orderId:$eq:string:' . $id);
 
-                        // dd($order->proxy->api_call, 'https://api.homeproxy.vn/api/merchant/proxies?filter=orderId:$eq:string:' . $id, $response->json());
                         $response_data = $response->json();
                         $order->payload_data = [];
                         if ($response->failed()) {
-                            // $value->price = 0;
                             $order->payload_data = [];
                         } else {
                             $arr = [];
-                            // dd($response_data, $id);
                             $arr_data = $response_data['data'][0];
-                            // dd($arr_data, $response_data['data'][0]);
 
                             $arr['id'] = $arr_data['orderId'];
                             $arr['proxy_type'] = $arr_data['proxy']['ipaddress']['provider'];
@@ -174,25 +189,10 @@ class HomeController extends Controller
                             $arr['username'] = $arr_data['proxy']['username'];
                             $order->payload_data = [$arr];
                             // dd($order->payload_data);
-                            // $order->payload = json_encode([$arr]);
-                            // Order::find($order->id)->update([
-                            //     'payload' => json_encode([$arr])
-                            // ]);
-                            // $order->save();
+                            $order->payload = json_encode([$arr]);
                         }
                     } catch (Exception $e) {
-                        // dd($e);
                     }
-                }
-            }
-            if (empty($order->end_date)) {
-                $order->status = 0;
-            } else {
-                $order->end_date = Carbon::parse($order->end_date)->startOfDay()->format('d-m-Y');
-                if (Carbon::parse($order->end_date)->startOfDay()->lt(Carbon::now()->startOfDay())) {
-                    $order->status = 0;
-                } else {
-                    $order->status = 1;
                 }
             }
         }
