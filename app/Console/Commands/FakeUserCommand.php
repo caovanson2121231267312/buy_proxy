@@ -32,12 +32,11 @@ class FakeUserCommand extends Command
     public function handle()
     {
         // $check = User::find(2)->delete();
-        $data = User::find(3);
-        $data->update([
-            "price" => 0
-        ]);
+        $data = User::where('email', 'caovanson.coderjava@gmail.com')->first();
+        $data->delete();
+        // dd($data);
 
-        dd($data);
+        return;
         $data = Order::find(2);
         $p = Proxy::limit(1)->orderBy('id', 'desc')->first();
         $up = 

@@ -97,8 +97,8 @@
                                 <th>Gia hạn</th>
                                 <th width="420">Thông tin đăng ký</th>
                                 {{-- <th>Mã đăng ký</th> --}}
-                                <th>Ngày Hết hạn</th>
-                                <th>Ngày mua</th>
+                                <th width="420">Ngày Hết hạn</th>
+                                <th width="420">Ngày mua</th>
                                 <th width="120">Hành động</th>
                             </tr>
                         </thead>
@@ -223,8 +223,8 @@
                                                         @endforeach
                                                 @endif
                                         </td> --}}
-                                    <td>{{ $order->end_date ? $order->end_date->format('d/m/Y') : '-' }}</td>
-                                    <td>{{ $order->created_at ? $order->created_at->format('d/m/Y') : '-' }}</td>
+                                    <td>{{ $order->end_date ? $order->end_date : '-' }}</td>
+                                    <td>{{ $order->created_at ? $order->created_at : '-' }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editOrder{{ $order->id }}">Sửa</button>

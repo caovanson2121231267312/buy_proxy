@@ -212,6 +212,7 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'user_id'  => auth()->id(),
+                'profit'  => $data_proxy->api_call->price_increase,
                 'proxy_id'  => $request->package_id,
                 'quantity'    => $quantity,
                 'unit_price'  => $unitPrice,
@@ -268,6 +269,7 @@ class OrderController extends Controller
             // dd(json_decode($data_proxy->content), $request->all(), $data_product, $response->json());
             $order = Order::create([
                 'user_id'  => auth()->id(),
+                'profit'  => $data_proxy->api_call->price_increase,
                 'proxy_id'  => $request->package_id,
                 'quantity'    => $quantity,
                 'unit_price'  => $unitPrice,

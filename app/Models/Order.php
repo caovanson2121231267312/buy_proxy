@@ -28,6 +28,7 @@ class Order extends Model
         'ip_address',
         'username',
         'auto_renew',
+        'profit',
     ];
 
     protected $casts = [

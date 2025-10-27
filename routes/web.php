@@ -11,6 +11,7 @@ use App\Http\Controllers\ProxyController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\NotificationController;
 
@@ -31,8 +32,10 @@ Route::get('/bai-viet/{slug}', [SeoController::class, 'show'])->name('seo.posts.
 Route::get('/lien-he', [SeoController::class, 'lien_he'])->name('lien_he');
 Route::post('/submit_lien_he', [SeoController::class, 'submit_lien_he'])->name('submit_lien_he');
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true, 'reset' => true]);
 
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     

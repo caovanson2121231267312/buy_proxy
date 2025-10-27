@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Str;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\VerifyEmailCustom;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -27,9 +28,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'price',
         'token',
-        'token',
         'email_verified_at',
-        'tran_code'
+        'tran_code',
+        'provider',
+        'id_google',
     ];
 
     /**
@@ -69,5 +71,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function trans()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailCustom());
     }
 }
